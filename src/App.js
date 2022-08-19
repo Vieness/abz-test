@@ -1,24 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import {HashRouter} from "react-router-dom";
+import Home from "./layout/Home";
+import {useEffect} from "react";
+import {useDispatch} from "react-redux";
+import {setToken} from "./features/singUp/slice/singUpSlice";
+import {useLazyGetTokenQuery} from "./features/singUp/singUpApi";
 
 function App() {
+  const accessToken = localStorage.getItem('access_token')
+  const dispatch = useDispatch()
+  const [fetchToken] = useLazyGetTokenQuery()
+
+  useEffect(() => {
+    if (accessToken) {
+      dispatch(setToken(accessToken))
+    } else {
+      fetchToken()
+    }
+  }, [dispatch, accessToken])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <HashRouter>
+      <Home/>
+    </HashRouter>
   );
 }
 
